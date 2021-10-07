@@ -39,7 +39,14 @@ namespace EasyRegex
 
         public object Find()
         {
+            BasicRule charge;
+            foreach (Rule rule in Rules)
+            {
 
+                charge = new BasicRule();
+                charge.Step();
+                charge.Complete();
+            }
             Console.WriteLine("Find");
             return "fdsfds";
         }
