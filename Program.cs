@@ -1,12 +1,59 @@
 ﻿using System;
+using System.Collections.Generic;
+using EasyRegex.src;
+
+
 
 namespace EasyRegex
 {
-    class Program
+    public class EasyRegex
     {
-        static void Main(string[] args)
+
+        protected string _input;
+
+        protected List<Rule> Rules = new List<Rule>();
+
+        public EasyRegex(Rule rule)
         {
-            Console.WriteLine("Hello World!");
+            AddRules(rule);
+        }
+
+        public EasyRegex Input(string input)
+        {
+            _input += input;
+            return this;
+        }
+
+        public EasyRegex AddRules(Rule rule)
+        {
+            Rules.Add(rule);
+
+            foreach(Rule obj in Rules) {
+                foreach (Rule rul in obj.Variables)
+                {
+                    Console.WriteLine(rul.Name);
+                }
+            }
+            return this;
+        }
+
+        public object Find()
+        {
+
+            Console.WriteLine("Find");
+            return "fdsfds";
+        }
+
+        public bool Check()
+        {
+            Console.WriteLine("Check");
+            return true;
+        }
+
+        public object Each()
+        {
+
+            return "fdsf";
         }
     }
 }
