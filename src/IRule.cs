@@ -15,7 +15,7 @@ namespace EasyRegex.src
 
         bool HasErrors();
 
-        string[] Result();
+        List<string> GetResult();
 
     }
 }

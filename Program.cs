@@ -27,28 +27,22 @@ namespace EasyRegex
         public EasyRegex AddRules(Rule rule)
         {
             Rules.Add(rule);
-
-            foreach(Rule obj in Rules) {
-                foreach (Rule rul in obj.Variables)
-                {
-                    Console.WriteLine(rul.Name);
-                }
-            }
             return this;
         }
 
-        public object Find()
+        public List<string> Find()
         {
-            BasicRule charge;
+
+            List<string> result = new List<string>();
             foreach (Rule rule in Rules)
             {
-
-                charge = new BasicRule();
+                Router charge = new Router(rule);
+                charge.Input(_input);
                 charge.Step();
                 charge.Complete();
+                result.AddRange(charge.GetResult());
             }
-            Console.WriteLine("Find");
-            return "fdsfds";
+            return result;
         }
 
         public bool Check()

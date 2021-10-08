@@ -12,6 +12,8 @@ namespace EasyRegex.src
     {
         public enum Direction { start = 1, stop = 2 }
 
+        public enum Status { Skip = 0, Wrong, Step, Complete }
+
         public string Name;
 
         public string Pattern;
@@ -34,6 +36,8 @@ namespace EasyRegex.src
 
         public bool Result;
 
+        protected string _result;
+
         public bool CaseInsensitive;
 
         public bool Loop;
@@ -46,7 +50,9 @@ namespace EasyRegex.src
 
         public bool AsArray;
 
-        private int _cursor;
+        private int _cursor = 0;
+
+        protected Status _status = Status.Skip;
 
         protected string _inputText;
 
@@ -56,7 +62,7 @@ namespace EasyRegex.src
 
         public List<Rule> Variables;
 
-        protected bool CheckRequires()
+        public virtual bool CheckRequires()
         {
             if (Name.Length == 0)
             {
@@ -65,6 +71,85 @@ namespace EasyRegex.src
 
             return true;
         }
+
+        public Status ParseSymbol(char c)
+        {
+            if (_status != Status.Step)
+            {
+                _status = Status.Skip;
+                _cursor = 0;
+                _result = "";
+            }
+            List<char> FoundChars = ParsePattern();
+            //Console.WriteLine("Cursor: {0}", _cursor);
+            foreach (char TryFindChar in FoundChars)
+            {
+                Console.WriteLine("Try find :{0}: in :{1}:", TryFindChar, c);
+                if (c == TryFindChar)
+                {
+                    _result += TryFindChar;
+                    if (_result.Length == Pattern.Length)
+                    {
+                        _status = Status.Complete;
+                        return Status.Complete;
+                    } 
+                    else
+                    {
+                        _status = Status.Step;
+                        return Status.Step;
+                    }
+
+                    /*if (_status == Status.Skip)
+                    {
+                        _status = Status.Step;
+                        return Status.Step; //????
+                    }
+                    if (_status == Status.Step && IsCompletePattern())
+                    {
+                        return Status.Complete;
+                    }
+                    return Status.Step;*/
+                }
+            }
+            if (_status == Status.Step)
+            {
+                _status = Status.Wrong;
+                return Status.Wrong;
+            }
+            return Status.Skip;
+        }
+
+        protected List<char> ParsePattern()
+        {
+            List<char> FoundChars = new List<char>();
+            if (IsCompletePattern())
+            {
+                _cursor = 0;
+                _status = Status.Skip;
+            }
+            if (IsCommandSymbol(Pattern[_cursor]) == false)
+            {
+                FoundChars.Add(Pattern[_cursor]);
+            }
+            _cursor++;
+            return FoundChars;
+        }
+
+        protected bool IsCommandSymbol(char c)
+        {
+            return false;
+        }
+
+        protected bool IsCompletePattern()
+        {
+            return _cursor >= Pattern.Length;
+        }
+        
+        public string GetResult()
+        {
+            return _result;
+        }
+
 
     }
 }
