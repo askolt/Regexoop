@@ -36,11 +36,14 @@ namespace EasyRegex
             List<string> result = new List<string>();
             foreach (Rule rule in Rules)
             {
-                Router charge = new Router(rule);
-                charge.Input(_input);
+                // each root rules have own input text;
+                InputText copyInput = new InputText();
+                copyInput.Input(_input);
+                Router charge = new Router(rule, copyInput);
                 charge.Step();
                 charge.Complete();
                 result.AddRange(charge.GetResult());
+                copyInput.Clear();
             }
             return result;
         }

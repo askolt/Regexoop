@@ -72,7 +72,7 @@ namespace EasyRegex.src
             return true;
         }
 
-        public Status ParseSymbol(char c)
+        public Status ParseSymbol(InputText inputChars)
         {
             if (_status != Status.Step)
             {
@@ -82,10 +82,11 @@ namespace EasyRegex.src
             }
             List<char> FoundChars = ParsePattern();
             //Console.WriteLine("Cursor: {0}", _cursor);
+            //Console.WriteLine("Try find in :{0}:", inputChars.GetSymbols(1));
             foreach (char TryFindChar in FoundChars)
             {
-                Console.WriteLine("Try find :{0}: in :{1}:", TryFindChar, c);
-                if (c == TryFindChar)
+                Console.WriteLine("Try find :{0}: in :{1}:", TryFindChar, inputChars.GetSymbols(1));
+                if (inputChars.GetSymbols(1) == TryFindChar.ToString())
                 {
                     _result += TryFindChar;
                     if (_result.Length == Pattern.Length)
@@ -95,6 +96,7 @@ namespace EasyRegex.src
                     } 
                     else
                     {
+//                        inputChars.MoveCursor(1);
                         _status = Status.Step;
                         return Status.Step;
                     }
@@ -113,6 +115,7 @@ namespace EasyRegex.src
             }
             if (_status == Status.Step)
             {
+                //inputChars.MoveCursor(1);
                 _status = Status.Wrong;
                 return Status.Wrong;
             }

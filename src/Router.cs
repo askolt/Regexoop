@@ -11,25 +11,21 @@ namespace EasyRegex.src
 
         protected List<string> _result = new List<string>();
 
-        protected string _input;
+        protected InputText _input;
 
         protected Rule _rule;
 
         protected int _cursor = 0;
 
-        public Router(Rule rule)
+        public Router(Rule rule, InputText input)
         {
             _rule = rule;
-        }
-
-        public void Input(string input)
-        {
-            _input += input;
+            _input = input;
         }
 
         public bool Step()
         {
-            if (_input.Length == 0)
+            if (_input.IsComplete())
             {
                 return true;
             }
@@ -39,19 +35,17 @@ namespace EasyRegex.src
                 return false;
             }
 
-            foreach (char c in _input)
+            while(_input.IsComplete() == false)
             {
-                Rule.Status stepResult = _rule.ParseSymbol(c);
+                Rule.Status stepResult = _rule.ParseSymbol(_input);
+                _input.MoveCursor(1); //todo 
                 if (stepResult == Rule.Status.Complete)
                 {
                     _result.Add(_rule.GetResult());
                 }
-                Console.WriteLine("Char: {0}  Step: {1}", c, stepResult);
-
+                //Console.WriteLine("Char: {0}  Step: {1}", _input.GetSymbols(1), stepResult);
                 _cursor += 1;
             }
-
-
             Console.WriteLine(_rule.Pattern);
 
             return true;
