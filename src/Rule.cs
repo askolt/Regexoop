@@ -62,6 +62,8 @@ namespace Regexoop.src
 
         public List<Rule> Variables;
 
+        protected int _redirectRule;
+
         public virtual bool CheckRequires()
         {
             if (Name.Length == 0)
@@ -128,7 +130,7 @@ namespace Regexoop.src
             if (IsCompletePattern())
             {
                 _cursor = 0;
-                _status = Status.Skip;
+                _status = Status.Skip; //todo check it
             }
             if (IsCommandSymbol(Pattern[_cursor]) == false)
             {
@@ -140,6 +142,7 @@ namespace Regexoop.src
 
         protected bool IsCommandSymbol(char c)
         {
+
             return false;
         }
 
@@ -151,6 +154,31 @@ namespace Regexoop.src
         public string GetResult()
         {
             return _result;
+        }
+
+        public void SetResult(string text)
+        {
+            _result += text;
+        }
+
+        public int GetRedirectRule()
+        {
+            return _redirectRule;
+        }
+
+        public bool SetRedirectRule(string name)
+        {
+            int x = 0; //todo has list the index?
+            foreach (Rule variable in Variables)
+            {
+                if (variable.Name == name)
+                {
+                    _redirectRule = x;
+                    return true;
+                }
+                x++;
+            }
+            return false;
         }
 
 

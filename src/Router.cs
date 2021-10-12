@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Regexoop.src
 {
     class Router : IRule
@@ -13,13 +14,16 @@ namespace Regexoop.src
 
         protected InputText _input;
 
-        protected Rule _rule;
+        protected Stack<Rule> _rule = new Stack<Rule>();
+
+        protected Rule _rootRule;
 
         protected int _cursor = 0;
 
         public Router(Rule rule, InputText input)
         {
-            _rule = rule;
+            _rule.Push(rule);
+            _rootRule = rule;
             _input = input;
         }
 
@@ -30,23 +34,34 @@ namespace Regexoop.src
                 return true;
             }
 
-            if (!_rule.CheckRequires())
+            if (!_rule.Peek().CheckRequires())
             {
                 return false;
             }
 
             while(_input.IsComplete() == false)
             {
-                Rule.Status stepResult = _rule.ParseSymbol(_input);
+                if (_rule.Count == 0)
+                {
+                    _rule.Push(_rootRule);
+                }
+
+                Rule.Status stepResult = _rule.Peek().ParseSymbol(_input);
                 _input.MoveCursor(1); //todo 
                 if (stepResult == Rule.Status.Complete)
                 {
-                    _result.Add(_rule.GetResult());
+                    _result.Add(_rule.Peek().GetResult());
+                    _rule.Pop();
                 }
                 //Console.WriteLine("Char: {0}  Step: {1}", _input.GetSymbols(1), stepResult);
                 _cursor += 1;
+                // todo maybe let call above yourself??
+                if (_rule.Peek().GetRedirectRule() != 0)
+                {
+                    _rule.Push(_rule.Peek().Variables[_rule.Peek().GetRedirectRule()]);
+                }
             }
-            Console.WriteLine(_rule.Pattern);
+            //Console.WriteLine(_rule.Pattern);
 
             return true;
         }
