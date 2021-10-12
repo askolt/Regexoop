@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using EasyRegex.src;
+using Regexoop.src;
 
-namespace EasyRegex.src
+namespace Regexoop.src
 {
 
     public abstract class Rule

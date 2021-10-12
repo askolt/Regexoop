@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EasyRegex.src
+namespace Regexoop.src
 {
     class Router : IRule
     {

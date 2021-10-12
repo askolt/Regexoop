@@ -1,30 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using EasyRegex.src;
+using Regexoop.src;
 
 
 
-namespace EasyRegex
+namespace Regexoop
 {
-    public class EasyRegex
+    public class Regexoop
     {
 
         protected string _input;
 
         protected List<Rule> Rules = new List<Rule>();
 
-        public EasyRegex(Rule rule)
+        public Regexoop(Rule rule)
         {
             AddRules(rule);
         }
 
-        public EasyRegex Input(string input)
+        public Regexoop Input(string input)
         {
             _input += input;
             return this;
         }
 
-        public EasyRegex AddRules(Rule rule)
+        public Regexoop AddRules(Rule rule)
         {
             Rules.Add(rule);
             return this;
