@@ -20,8 +20,6 @@ namespace Regexoop.src
 
         protected Rule _rootRule;
 
-        //protected int _cursor = 0;
-
         public Router(Rule rule, InputText input)
         {
             _rule.Push(rule);
@@ -43,13 +41,7 @@ namespace Regexoop.src
 
             while(_input.IsComplete() == false)
             {
-                if (_rule.Count == 0)
-                {
-                    _rule.Push(_rootRule);
-                }
-
                 Rule.Status stepResult = _rule.Peek().ParseSymbol(_input);
-                
                 if (stepResult == Rule.Status.Complete)
                 {
                     _rawResult.Add(_rule.Peek().GetResult());
@@ -67,14 +59,11 @@ namespace Regexoop.src
                         _rawResult.Clear();
                     }
                 }
-                //Console.WriteLine("Char: {0}  Step: {1}", _input.GetSymbols(1), stepResult);
-                //_cursor += 1;
-
                 if (_rule.Count == 0) //todo
                 {
                     _rule.Push(_rootRule);
                 }
-                // todo maybe let call above yourself??
+                // todo recursive call
                 if (_rule.Peek().NeedRedirect())
                 {
                     _rule.Push(_rule.Peek().Variables[_rule.Peek().GetRedirectRule()]);
@@ -83,10 +72,7 @@ namespace Regexoop.src
                 {
                     _input.MoveCursor(1); //todo 
                 }
-
             }
-            //Console.WriteLine(_rule.Pattern);
-
             return true;
         }
 

@@ -25,17 +25,6 @@ namespace Regexoop.src
             {
                 rule.SetResult(Middle);
                 return Rule.Status.Step;
-            /*    if (_result.Length == Pattern.Length)
-                {
-                    _status = Status.Complete;
-                    return Status.Complete;
-                }
-                else
-                {
-                    _status = Status.Step;
-                    return Status.Step;
-                }*/
-
             }
             return Rule.Status.Wrong;
         }

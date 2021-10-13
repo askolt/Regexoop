@@ -54,8 +54,6 @@ namespace Regexoop.src
 
         protected Status _status = Status.Skip;
 
-        //protected string _inputText;
-
         public delegate void IfBefore();
 
         public delegate void IfAfter();
@@ -91,14 +89,12 @@ namespace Regexoop.src
                 _cursorPattern = 0;
                 _result = "";
             }
-            //List<char> FoundChars = ParsePattern();
             ICommand command = ParsePattern();
             if (command == null)
             {
                 return _status;
             }
             Status resStatus = command.Parse(ref inputChars, this);
-            //inputChars.MoveCursor(1);
             if (resStatus == Status.Step && _result.Length == Pattern.Length)
             {
                 _status = Status.Complete;
@@ -154,7 +150,6 @@ namespace Regexoop.src
 
         protected bool IsCommandSymbol(char c)
         {
-
             return false;
         }
 
@@ -186,7 +181,7 @@ namespace Regexoop.src
 
         public bool SetRedirectRule(string name)
         {
-            int x = 0; //todo has list the index?
+            int x = 0;
             foreach (Rule variable in Variables)
             {
                 if (variable.Name == name)

@@ -15,7 +15,6 @@ namespace Regexoop.src
         //Warning. Don't move cursor here. 
         public string GetSymbols(int range)
         {
-//            Console.WriteLine("Cursor inputText: {0}", _cursor);
             List<char> chars = new List<char>();
             int EndRange = _cursor + range;
             if (EndRange > _inputText.Length)
