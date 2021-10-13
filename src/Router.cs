@@ -54,16 +54,16 @@ namespace Regexoop.src
                 {
                     _rawResult.Add(_rule.Peek().GetResult());
                     _rule.Pop();
-
+                    
                     if (_rule.Count == 0) //root rule has been complete
                     {
+                        _result.Add(_rawResult[0]);
+                        _rawResult.Clear();
                         _rule.Push(_rootRule);
-                        string tempResult = "";
-                        for (int index = _rawResult.Count - 1; index >= 0; index--)
-                        {
-                            tempResult += _rawResult[index];
-                        }
-                        _result.Add(tempResult);
+                    }
+                    else
+                    {
+                        _rule.Peek().SetResult(_rawResult[0]);
                         _rawResult.Clear();
                     }
                 }
