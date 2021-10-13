@@ -12,13 +12,15 @@ namespace Regexoop.src
 
         protected List<string> _result = new List<string>();
 
+        protected List<string> _rawResult = new List<string>();
+
         protected InputText _input;
 
         protected Stack<Rule> _rule = new Stack<Rule>();
 
         protected Rule _rootRule;
 
-        protected int _cursor = 0;
+        //protected int _cursor = 0;
 
         public Router(Rule rule, InputText input)
         {
@@ -47,24 +49,41 @@ namespace Regexoop.src
                 }
 
                 Rule.Status stepResult = _rule.Peek().ParseSymbol(_input);
-                _input.MoveCursor(1); //todo 
+                
                 if (stepResult == Rule.Status.Complete)
                 {
-                    _result.Add(_rule.Peek().GetResult());
+                    _rawResult.Add(_rule.Peek().GetResult());
                     _rule.Pop();
+
+                    if (_rule.Count == 0) //root rule has been complete
+                    {
+                        _rule.Push(_rootRule);
+                        string tempResult = "";
+                        for (int index = _rawResult.Count - 1; index >= 0; index--)
+                        {
+                            tempResult += _rawResult[index];
+                        }
+                        _result.Add(tempResult);
+                        _rawResult.Clear();
+                    }
                 }
                 //Console.WriteLine("Char: {0}  Step: {1}", _input.GetSymbols(1), stepResult);
-                _cursor += 1;
+                //_cursor += 1;
 
                 if (_rule.Count == 0) //todo
                 {
                     _rule.Push(_rootRule);
                 }
                 // todo maybe let call above yourself??
-                if (_rule.Peek().GetRedirectRule() != 0)
+                if (_rule.Peek().NeedRedirect())
                 {
                     _rule.Push(_rule.Peek().Variables[_rule.Peek().GetRedirectRule()]);
                 }
+                else
+                {
+                    _input.MoveCursor(1); //todo 
+                }
+
             }
             //Console.WriteLine(_rule.Pattern);
 

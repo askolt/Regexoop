@@ -14,6 +14,6 @@ namespace Regexoop.src
 
         abstract public string EndCommand { get; } 
 
-        public abstract Rule.Status Parse(ref InputText inputText, Rule rule);
+        public abstract Rule.Status Parse(ref InputText inputText, in Rule rule);
     }
 }

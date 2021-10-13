@@ -50,11 +50,11 @@ namespace Regexoop.src
 
         public bool AsArray;
 
-        private int _cursor = 0;
+        private int _cursorPattern = 0;
 
         protected Status _status = Status.Skip;
 
-        protected string _inputText;
+        //protected string _inputText;
 
         public delegate void IfBefore();
 
@@ -64,12 +64,13 @@ namespace Regexoop.src
 
         protected int _redirectRule;
 
+        protected bool _needRedirect;
+
         List<ICommand> _commands = new List<ICommand>();
 
         public Rule()
         {
             _commands.Add(new RedirectCommand());
-            _commands.Add(new TextCommand());
         }
 
         public virtual bool CheckRequires()
@@ -87,11 +88,15 @@ namespace Regexoop.src
             if (_status != Status.Step)
             {
                 _status = Status.Skip;
-                _cursor = 0;
+                _cursorPattern = 0;
                 _result = "";
             }
             //List<char> FoundChars = ParsePattern();
             ICommand command = ParsePattern();
+            if (command == null)
+            {
+                return _status;
+            }
             Status resStatus = command.Parse(ref inputChars, this);
             //inputChars.MoveCursor(1);
             if (resStatus == Status.Step && _result.Length == Pattern.Length)
@@ -115,22 +120,36 @@ namespace Regexoop.src
         {
             if (IsCompletePattern())
             {
-                _cursor = 0;
-                _status = Status.Skip; //todo check it
+                _cursorPattern = 0;
+                _status = Status.Complete; //todo check it
+                return null;
+            }
+            foreach (ICommand command in _commands)
+            {
+                if (command.StartCommand == Pattern[_cursorPattern].ToString())
+                {
+                    int tempCursor = _cursorPattern + 1;
+                    string body = "";
+                    while (tempCursor <= Pattern.Length)
+                    {
+                        if (command.EndCommand == Pattern[tempCursor].ToString())
+                        {
+                            command.Middle = body;
+                            _cursorPattern = tempCursor + 1;
+                            return command;
+                        }
+                        else
+                        {
+                            body += Pattern[tempCursor];
+                        }
+                        tempCursor++;
+                    }
+                }
             }
             ICommand text = new TextCommand();
-            text.Middle = Pattern[_cursor].ToString();
-            _cursor++;
+            text.Middle = Pattern[_cursorPattern].ToString();
+            _cursorPattern++;
             return text;
-            
-            List<char> FoundChars = new List<char>();
-            
-            if (IsCommandSymbol(Pattern[_cursor]) == false)
-            {
-                FoundChars.Add(Pattern[_cursor]);
-            }
-            
-            //return FoundChars;
         }
 
         protected bool IsCommandSymbol(char c)
@@ -141,7 +160,7 @@ namespace Regexoop.src
 
         protected bool IsCompletePattern()
         {
-            return _cursor >= Pattern.Length;
+            return _cursorPattern >= Pattern.Length;
         }
         
         public string GetResult()
@@ -156,7 +175,13 @@ namespace Regexoop.src
 
         public int GetRedirectRule()
         {
+            _needRedirect = false;
             return _redirectRule;
+        }
+
+        public bool NeedRedirect()
+        {
+            return _needRedirect;
         }
 
         public bool SetRedirectRule(string name)
@@ -166,6 +191,7 @@ namespace Regexoop.src
             {
                 if (variable.Name == name)
                 {
+                    _needRedirect = true;
                     _redirectRule = x;
                     return true;
                 }
@@ -173,7 +199,5 @@ namespace Regexoop.src
             }
             return false;
         }
-
-
     }
 }

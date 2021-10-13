@@ -19,7 +19,7 @@ namespace Regexoop.src
         public override string Middle { get => _middle; set => _middle = value; }
         public override string EndCommand { get => _endCommand; }
 
-        public override Rule.Status Parse(ref InputText inputText, Rule rule)
+        public override Rule.Status Parse(ref InputText inputText, in Rule rule)
         {
             bool res = rule.SetRedirectRule(Middle);
             if (res == false)
