@@ -55,6 +55,11 @@ namespace Regexoop.src
                 }
                 //Console.WriteLine("Char: {0}  Step: {1}", _input.GetSymbols(1), stepResult);
                 _cursor += 1;
+
+                if (_rule.Count == 0) //todo
+                {
+                    _rule.Push(_rootRule);
+                }
                 // todo maybe let call above yourself??
                 if (_rule.Peek().GetRedirectRule() != 0)
                 {

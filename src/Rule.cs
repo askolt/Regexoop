@@ -64,6 +64,14 @@ namespace Regexoop.src
 
         protected int _redirectRule;
 
+        List<ICommand> _commands = new List<ICommand>();
+
+        public Rule()
+        {
+            _commands.Add(new RedirectCommand());
+            _commands.Add(new TextCommand());
+        }
+
         public virtual bool CheckRequires()
         {
             if (Name.Length == 0)
@@ -82,62 +90,47 @@ namespace Regexoop.src
                 _cursor = 0;
                 _result = "";
             }
-            List<char> FoundChars = ParsePattern();
-            //Console.WriteLine("Cursor: {0}", _cursor);
-            //Console.WriteLine("Try find in :{0}:", inputChars.GetSymbols(1));
-            foreach (char TryFindChar in FoundChars)
+            //List<char> FoundChars = ParsePattern();
+            ICommand command = ParsePattern();
+            Status resStatus = command.Parse(ref inputChars, this);
+            //inputChars.MoveCursor(1);
+            if (resStatus == Status.Step && _result.Length == Pattern.Length)
             {
-                Console.WriteLine("Try find :{0}: in :{1}:", TryFindChar, inputChars.GetSymbols(1));
-                if (inputChars.GetSymbols(1) == TryFindChar.ToString())
-                {
-                    _result += TryFindChar;
-                    if (_result.Length == Pattern.Length)
-                    {
-                        _status = Status.Complete;
-                        return Status.Complete;
-                    } 
-                    else
-                    {
-//                        inputChars.MoveCursor(1);
-                        _status = Status.Step;
-                        return Status.Step;
-                    }
-
-                    /*if (_status == Status.Skip)
-                    {
-                        _status = Status.Step;
-                        return Status.Step; //????
-                    }
-                    if (_status == Status.Step && IsCompletePattern())
-                    {
-                        return Status.Complete;
-                    }
-                    return Status.Step;*/
-                }
+                _status = Status.Complete;
+                return Status.Complete;
             }
-            if (_status == Status.Step)
+            if (resStatus == Status.Wrong && _status == Status.Step)
             {
-                //inputChars.MoveCursor(1);
                 _status = Status.Wrong;
                 return Status.Wrong;
             }
-            return Status.Skip;
+            if (resStatus == Status.Step)
+            {
+                _status = Status.Step;
+            }
+            return _status;
         }
 
-        protected List<char> ParsePattern()
+        protected ICommand ParsePattern()
         {
-            List<char> FoundChars = new List<char>();
             if (IsCompletePattern())
             {
                 _cursor = 0;
                 _status = Status.Skip; //todo check it
             }
+            ICommand text = new TextCommand();
+            text.Middle = Pattern[_cursor].ToString();
+            _cursor++;
+            return text;
+            
+            List<char> FoundChars = new List<char>();
+            
             if (IsCommandSymbol(Pattern[_cursor]) == false)
             {
                 FoundChars.Add(Pattern[_cursor]);
             }
-            _cursor++;
-            return FoundChars;
+            
+            //return FoundChars;
         }
 
         protected bool IsCommandSymbol(char c)

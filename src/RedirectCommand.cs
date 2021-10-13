@@ -9,13 +9,17 @@ namespace Regexoop.src
     class RedirectCommand : ICommand
     {
 
-        public string StartCommand = "{";
+        private string _startCommand = "{";
 
-        public string Middle;
+        private string _middle;
 
-        public string EndCommand = "}";
+        private string _endCommand = "}";
 
-        public Rule.Status Parse(ref InputText inputText, ref Rule rule)
+        public override string StartCommand { get => _startCommand; }
+        public override string Middle { get => _middle; set => _middle = value; }
+        public override string EndCommand { get => _endCommand; }
+
+        public override Rule.Status Parse(ref InputText inputText, Rule rule)
         {
             bool res = rule.SetRedirectRule(Middle);
             if (res == false)

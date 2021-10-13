@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace Regexoop.src
 {
-    interface ICommand
+    public abstract class ICommand
     {
-        Rule.Status Parse(ref InputText inputText, ref Rule rule)
-        {
-            return Rule.Status.Complete;
-        }
+        abstract public string StartCommand { get; }
+
+        abstract public string Middle { get; set; }
+
+        abstract public string EndCommand { get; } 
+
+        public abstract Rule.Status Parse(ref InputText inputText, Rule rule);
     }
 }
