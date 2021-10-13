@@ -69,6 +69,7 @@ namespace Regexoop.src
         public Rule()
         {
             _commands.Add(new RedirectCommand());
+            _commands.Add(new RangeCommand());
         }
 
         public virtual bool CheckRequires()
