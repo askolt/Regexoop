@@ -59,6 +59,10 @@ namespace Regexoop.src
                         _rawResult.Clear();
                     }
                 }
+                if (stepResult == Rule.Status.Wrong)
+                {
+                    _rule.Pop();
+                }
                 if (_rule.Count == 0) //todo
                 {
                     _rule.Push(_rootRule);
@@ -66,7 +70,11 @@ namespace Regexoop.src
                 // todo recursive call
                 if (_rule.Peek().NeedRedirect())
                 {
-                    _rule.Push(_rule.Peek().Variables[_rule.Peek().GetRedirectRule()]);
+                    /*Rule redirectRule = _rule.Peek().GetRedirectRule();
+                    if (redirectRule.LoopVariable >= 0)
+                    {*/
+                        _rule.Push(_rule.Peek().GetRedirectRule());
+                    /*}*/
                 }
                 else
                 {

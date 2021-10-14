@@ -21,12 +21,14 @@ namespace Regexoop.src
 
         public override Rule.Status Parse(ref InputText inputText, in Rule rule)
         {
-            bool res = rule.SetRedirectRule(Middle);
+            bool res = rule.SetRedirectRule(Middle, rule);
             if (res == false)
             {
-                throw new Exception($"Variable {Middle} not found.");
+                throw new ArgumentException($"Variable {Middle} not found.");
             }
             return Rule.Status.Step;
         }
+
+        
     }
 }

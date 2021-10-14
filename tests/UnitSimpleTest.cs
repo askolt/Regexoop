@@ -46,7 +46,8 @@ namespace ConsoleRegexoop
                 Start = Rule.Direction.start,
                 Variables = new List<Rule> {
                                               new BasicRule() { Name = "world",
-                                                                Pattern = "World"
+                                                                Pattern = "World",
+                                                                //Start = Rule.Direction.start
                                               }
                                           }
             };
@@ -106,9 +107,8 @@ namespace ConsoleRegexoop
         }
 
         [Fact]
-        public void ErrorMultipleCall()
+        public void ErrorBadPatternCase1()
         {
-            //case 1
             Rule test = new BasicRule()
             {
                 Name = "root",
@@ -120,43 +120,97 @@ namespace ConsoleRegexoop
                                               }
                                           }
             };
-
             List<string> res = new Regexoop.Regexoop(test).Input("Hello World Hello World").Find();
             Assert.True(res.Count == 0);
-            //case 2
-            test = new BasicRule()
+            foreach (string re in res)
             {
-                Name = "root",
-                Pattern = "Hello {world} Hello {world}",
-                Start = Rule.Direction.start,
-                Variables = new List<Rule> {
-                                              new BasicRule() { Name = "world",
-                                                                Pattern = "World"
-                                              }
-                                          }
-            };
-
-            res = new Regexoop.Regexoop(test).Input("He1llo World Hello World").Find();
-            Assert.True(res.Count == 0);
-            //case 3
-            test = new BasicRule()
-            {
-                Name = "root",
-                Pattern = "Hello {world} Hello {world}",
-                Start = Rule.Direction.start,
-                Variables = new List<Rule> {
-                                              new BasicRule() { Name = "world",
-                                                                Pattern = "World"
-                                              }
-                                          }
-            };
-
-            res = new Regexoop.Regexoop(test).Input("Hello World Hello Wo1rld").Find();
-            Assert.True(res.Count == 0);
+                Assert.Equal("", re);
+            }
         }
 
         [Fact]
-        public void RecursiveCallVariable()
+        public void ErrorBadPatternCase2()
+        {
+            Rule test = new BasicRule()
+            {
+                Name = "root",
+                Pattern = "Hello {world} Hello {world}",
+                Start = Rule.Direction.start,
+                Variables = new List<Rule> {
+                                              new BasicRule() { Name = "world",
+                                                                Pattern = "World"
+                                              }
+                                          }
+            };
+
+            List<string> res = new Regexoop.Regexoop(test).Input("He1llo World Hello World").Find();
+            Assert.True(res.Count == 0);
+            foreach (string re in res)
+            {
+                Assert.Equal("", re);
+            }
+        }
+
+        [Fact]
+        public void ErrorBadPatternCase3()
+        {
+            Rule test = new BasicRule()
+            {
+                Name = "root",
+                Pattern = "Hello {world} Hello {world}",
+                Start = Rule.Direction.start,
+                Variables = new List<Rule> {
+                                              new BasicRule() { Name = "world",
+                                                                Pattern = "World"
+                                              }
+                                          }
+            };
+
+            List<string> res = new Regexoop.Regexoop(test).Input("Hello World Hello Wo1rld").Find();
+            Assert.True(res.Count == 0);
+            foreach (string re in res)
+            {
+                Assert.Equal("", re);
+            }
+        }
+
+        [Fact]
+        public void RecursiveErrorCase1()
+        {
+            Rule test = new BasicRule()
+            {
+                Name = "root",
+                Pattern = "Hello{root}",
+                Start = Rule.Direction.start
+            };
+
+            Action act = () => new Regexoop.Regexoop(test).Input("HelloHelloHello").Find();
+            ArgumentException exception = Assert.Throws<ArgumentException>(act);
+            Assert.Equal("Variable root not found.", exception.Message);
+        }
+
+        [Fact]
+        public void RecursiveErrorCase2()
+        {
+            Rule test = new BasicRule()
+            {
+                Name = "root",
+                Pattern = "Hello {world}",
+                Start = Rule.Direction.start,
+                Variables = new List<Rule> {
+                                              new BasicRule() { Name = "world",
+                                                                Pattern = "World{root}"
+                                              }
+                                          }
+            };
+
+            Action act = () => new Regexoop.Regexoop(test).Input("Hello WorldHello").Find();
+            ArgumentException exception = Assert.Throws<ArgumentException>(act);
+            Assert.Equal("Variable root not found.", exception.Message);
+        }
+
+        [Fact]
+        public void RecursiveCase1()
         {
             Rule test = new BasicRule()
             {
@@ -165,16 +219,17 @@ namespace ConsoleRegexoop
                 Start = Rule.Direction.start,
                 Variables = new List<Rule> {
                                               new BasicRule() { Name = "world",
-                                                                Pattern = " World"
+                                                                Pattern = " World{world}",
+                                                                LoopVariable = 1
                                               }
                                           }
             };
 
-            List<string> res = new Regexoop.Regexoop(test).Input("Hello World World World").Find();
-            Assert.True(res.Count == 1);
+            List<string> res =  new Regexoop.Regexoop(test).Input("Hello World World Hello World World").Find();
+            Assert.True(res.Count == 2);
             foreach (string re in res)
             {
-                Assert.Equal("Hello World Hello World", re);
+                Assert.Equal("Hello World World", re);
             }
         }
 
