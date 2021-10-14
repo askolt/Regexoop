@@ -130,21 +130,21 @@ namespace Regexoop.src
             {
                 if (command.StartCommand == Pattern[_cursorPattern].ToString())
                 {
-                    int tempCursor = GetCursorPattern() + 1;
+                    int tempCursor = 1;
                     string body = "";
-                    while (tempCursor <= Pattern.Length)
+                    while (GetCursorPattern(tempCursor) <= Pattern.Length)
                     {
-                        if (command.EndCommand == Pattern[tempCursor].ToString())
+                        if (command.EndCommand == Pattern[GetCursorPattern(tempCursor)].ToString())
                         {
                             command.Middle = body;
-                            _cursorPattern = tempCursor + 1;
+                            //_cursorPattern = tempCursor + 1;
                             //tempCursor = tempCursor + 1;
-                            //MoveCursorPattern(tempCursor+2);
+                            MoveCursorPattern(tempCursor + 1);
                             return command;
                         }
                         else
                         {
-                            body += Pattern[tempCursor];
+                            body += Pattern[GetCursorPattern(tempCursor)];
                         }
                         tempCursor++;
                     }
