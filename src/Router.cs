@@ -41,6 +41,7 @@ namespace Regexoop.src
 
             while(_input.IsComplete() == false)
             {
+                _input.MoveCursor(1);
                 Rule.Status stepResult = _rule.Peek().ParseSymbol(_input);
                 if (stepResult == Rule.Status.Complete)
                 {
@@ -68,18 +69,19 @@ namespace Regexoop.src
                     _rule.Push(_rootRule);
                 }
                 // todo recursive call
-                if (_rule.Peek().NeedRedirect())
+                if (_rule.Peek().IsNeedRedirect())
                 {
-                    /*Rule redirectRule = _rule.Peek().GetRedirectRule();
-                    if (redirectRule.LoopVariable >= 0)
-                    {*/
-                        _rule.Push(_rule.Peek().GetRedirectRule());
-                    /*}*/
+                    Rule redirectRule = _rule.Peek().GetRedirectRule();
+                    _rule.Peek().ResetRedirect();
+                    _rule.Push(redirectRule);
                 }
-                else
+               /* else
                 {
-                    _input.MoveCursor(1); //todo 
-                }
+                    if (_rule.Peek().IsMoveInputCursor())
+                    {
+                        
+                    }
+                }*/
             }
             return true;
         }

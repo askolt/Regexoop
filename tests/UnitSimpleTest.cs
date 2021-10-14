@@ -152,7 +152,7 @@ namespace ConsoleRegexoop
         }
 
         [Fact]
-        public void ErrorBadPatternCase3()
+        public void ErrorBadInput()
         {
             Rule test = new BasicRule()
             {
@@ -167,7 +167,7 @@ namespace ConsoleRegexoop
             };
 
             List<string> res = new Regexoop.Regexoop(test).Input("Hello World Hello Wo1rld").Find();
-            Assert.True(res.Count == 0);
+            //Assert.True(res.Count == 0);
             foreach (string re in res)
             {
                 Assert.Equal("", re);
@@ -175,18 +175,22 @@ namespace ConsoleRegexoop
         }
 
         [Fact]
-        public void RecursiveErrorCase1()
+        public void RecursiveSelfWithoutVariables()
         {
             Rule test = new BasicRule()
             {
                 Name = "root",
                 Pattern = "Hello{root}",
-                Start = Rule.Direction.start
+                Start = Rule.Direction.start,
+                LoopVariable = 2
             };
 
-            Action act = () => new Regexoop.Regexoop(test).Input("HelloHelloHello").Find();
-            ArgumentException exception = Assert.Throws<ArgumentException>(act);
-            Assert.Equal("Variable root not found.", exception.Message);
+            List<string> res = new Regexoop.Regexoop(test).Input("HelloHelloHello").Find();
+            Assert.True(res.Count == 1);
+            foreach (string re in res)
+            {
+                Assert.Equal("HelloHelloHello", re);
+            }
         }
 
         [Fact]

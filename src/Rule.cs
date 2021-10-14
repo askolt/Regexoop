@@ -64,6 +64,8 @@ namespace Regexoop.src
 
         protected bool _needRedirect;
 
+        protected bool _moveInputCursor;
+
         List<ICommand> _commands = new List<ICommand>();
 
         public Rule()
@@ -84,6 +86,7 @@ namespace Regexoop.src
 
         public Status ParseSymbol(InputText inputChars)
         {
+            //_moveInputCursor = false;
             if (_status != Status.Step)
             {
                 _status = Status.Skip;
@@ -95,14 +98,16 @@ namespace Regexoop.src
             {
                 return _status;
             }
+            //_moveInputCursor = true;
             Status resStatus = command.Parse(ref inputChars, this);
-            /*        if (resStatus == Status.Complete) //stop recursion 
-                    {
-                        _status = Status.Complete;
-                        return Status.Complete;
-                    }*/
-            if (resStatus == Status.Step && _result.Length == Pattern.Length) //normal way
+            /*if (resStatus == Status.Complete) //stop recursion 
             {
+                _status = Status.Complete;
+            }*/
+            //if (resStatus == Status.Step && _result.Length == Pattern.Length) //normal way
+            if (resStatus == Status.Step && IsCompletePattern() && IsNeedRedirect() == false) //normal way
+            {
+                _moveInputCursor = false;
                 _status = Status.Complete;
                 return Status.Complete;
             }
@@ -126,6 +131,7 @@ namespace Regexoop.src
                 _status = Status.Complete; //todo check it
                 return null;
             }
+            _moveInputCursor = true;
             foreach (ICommand command in _commands)
             {
                 if (command.StartCommand == Pattern[_cursorPattern].ToString())
@@ -153,6 +159,7 @@ namespace Regexoop.src
             ICommand text = new TextCommand();
             text.Middle = Pattern[_cursorPattern].ToString();
             MoveCursorPattern(1);
+
             return text;
         }
 
@@ -200,6 +207,11 @@ namespace Regexoop.src
             return _cursorPattern;
         }
 
+        public bool IsMoveInputCursor()
+        {
+            return _moveInputCursor;
+        }
+
         public string GetResult()
         {
             return _result;
@@ -212,13 +224,18 @@ namespace Regexoop.src
 
         public Rule GetRedirectRule()
         {
-            _needRedirect = false;
             return _redirectRule;
         }
 
-        public bool NeedRedirect()
+        public bool IsNeedRedirect()
         {
             return _needRedirect;
+        }
+
+        public void ResetRedirect()
+        {
+            _needRedirect = false;
+            _redirectRule = null;
         }
 
         protected void SetNeedRedirect()
@@ -234,6 +251,11 @@ namespace Regexoop.src
                 _needRedirect = true;
                 Rule redirectRule = new BasicRule().CopyRule(rule);
                 redirectRule.LoopVariable -= 1;
+                if (redirectRule.LoopVariable < 0)
+                {
+                    //_redirectRule = null;
+                    _needRedirect = false;
+                }
                 _redirectRule = redirectRule;
                 return true;
             }

@@ -12,9 +12,12 @@ namespace Regexoop.src
 
         protected string _inputText;
 
+        protected bool _useInputText;
+
         //Warning. Don't move cursor here. 
         public string GetSymbols(int range)
         {
+            _useInputText = true;
             List<char> chars = new List<char>();
             int EndRange = _cursor + range;
             if (EndRange > _inputText.Length)
@@ -30,12 +33,16 @@ namespace Regexoop.src
 
         public void MoveCursor(int count)
         {
-            //todo clear readed text
-            if (count <= 0)
+            if (_useInputText == true)
             {
-                count = 1;
+                _useInputText = false;
+                //todo clear readed text
+                if (count <= 0)
+                {
+                    count = 1;
+                }
+                _cursor += count;
             }
-            _cursor += count;
         }
 
         public bool IsComplete()

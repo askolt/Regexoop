@@ -26,6 +26,10 @@ namespace Regexoop.src
             {
                 throw new ArgumentException($"Variable {Middle} not found.");
             }
+            /*if (rule.GetRedirectRule().LoopVariable < 0)
+            {
+                rule.GetRedirectRule().Pattern = "";
+            }*/
             return Rule.Status.Step;
         }
 
