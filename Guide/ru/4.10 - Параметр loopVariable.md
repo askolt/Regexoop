@@ -1,0 +1,36 @@
+| Название | Значение |
+|---|---|
+| Наследуемый | Нет |
+| Тип | int |
+| Категория | Пользовательский |
+| Значение по умолчанию | 10 |
+
+Для каждой переменной можно настроить количество вызовов с помощью параметра `loopVariable`. По умолчанию стоит 10. При срабатывании счётчика, дальнейший вызов переменной не будет иметь эффекта и переменная вернёт результат. 
+
+Простой вызов переменной. Здесь нет рекурсии и соответственно внутренний счётчик `loopVariable` всегда будет 1. 
+
+``` csharp
+var rules = new { 
+	pattern = "{one} {one} {one} {one}"
+	one = new {
+		pattern = "Hello",
+		loopVariable = 2
+    }
+};
+// Input: Hello Hello Hello Hello
+// Output: Hello Hello Hello Hello
+```
+
+Пример c рекурсией.
+
+``` csharp
+var rules = new { 
+	pattern = "{one}"
+	one = new {
+		pattern = "Hello {one}",
+		loopVariable = 2
+    }
+};
+// Input: Hello Hello Hello Hello
+// Output: Hello Hello
+```

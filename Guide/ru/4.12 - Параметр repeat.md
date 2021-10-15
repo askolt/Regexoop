@@ -1,0 +1,40 @@
+Необязательные параметр `repeat` позволяет задать обязательное количество повторов переменной со всеми параметрами заново для заданной переменной после выполнения шаблона регулярного выражения текущего блока. 
+
+### Поток выполнения
+
+ `Вызов переменной` -> `...` -> `pattern` -> `...` -> `repeat` -> `...` -> `Повторный вызов переменной`
+
+```csharp
+var rules = new { 
+    pattern = "{one}"
+    one = new {
+        pattern = "Hello ",
+        repeat = 3
+    }
+};
+// Input: Hello Hello Hello Hello Hello
+// Output: Hello Hello Hello Hello
+```
+
+Параметры `minReapet` и `maxReapet` позволяют настроить минимальное и максимальное количество повторов. Также, если один из этих параметров указан, то действите параметра `repeat` анулируется.
+
+```csharp
+var rules = new { 
+    pattern = "{one}",
+	repeat = 1,
+    one = new {
+        pattern = "Hello ",
+		minReapet = 1,
+		maxReapet = 1
+    }
+};
+// Input: Hello Hello Hello Hello
+// Output: ["Hello Hello", "Hello Hello"]
+```
+
+
+### Значения по умолчанию
+
+**repeat** = **0**
+**minRepeat** = **0**
+**maxRepeat** = **0**
