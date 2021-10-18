@@ -1,4 +1,4 @@
-# [0 - Описание и установка](0 - Описание и установка библиотеки.md)
+# [0 - Description and install](0 - Description and install.md)
 # [1 - Режимы работы](1 - Режимы работы.md)
 ## [1.1 - Добавление правил](1.1 - Добавление правил.md)
 ## [1.2 - Метод Input и Find, Each, Check](1.2 - Метод Input и Find, Each, Check.md)
