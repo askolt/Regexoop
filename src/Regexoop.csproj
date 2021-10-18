@@ -7,6 +7,13 @@
     <StartupObject />
     <AssemblyName>Regexoop</AssemblyName>
     <RootNamespace>Regexoop</RootNamespace>
+    <Version>0.0.1</Version>
+    <Description>Object-oriented search in a text</Description>
+    <Authors>askolt</Authors>
+    <Company>regexoop.com</Company>
+    <PackageProjectUrl>https://github.com/askolt/Regexoop</PackageProjectUrl>
+    <PackageTags>search text parser</PackageTags>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
 </Project>
