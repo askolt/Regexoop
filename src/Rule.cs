@@ -10,7 +10,7 @@ namespace Regexoop.src
 
     public abstract class Rule
     {
-        public enum Direction { start = 1, stop = 2 }
+        public enum Direction { start = 1, end = 2 }
 
         public enum Status { Skip = 0, Wrong, Step, Complete }
 
@@ -68,6 +68,8 @@ namespace Regexoop.src
 
         List<ICommand> _commands = new List<ICommand>();
 
+        protected bool _preparedRule;
+
         public Rule()
         {
             _commands.Add(new RedirectCommand());
@@ -81,6 +83,36 @@ namespace Regexoop.src
                 return false;
             }
 
+            return true;
+        }
+
+        public virtual bool PrepareRule()
+        {
+            if (_preparedRule)
+            {
+                return true;
+            }
+            if (Start == Direction.end)
+            {
+                List<string> patternRevers = new List<string>();
+                while(IsCompletePattern() == false)
+                {
+                    ICommand command = ParsePattern();
+                    if (command == null)
+                    {
+                        break;
+                    }
+                    patternRevers.Add(command.StartCommand + command.Middle + command.EndCommand);
+                }
+                Pattern = "";
+                for (int i = patternRevers.Count - 1; i >= 0; i--)
+                {
+                    Pattern += patternRevers[i];
+                }
+                _preparedRule = true;
+                _status = Status.Skip;
+                ResetCursorPattern();
+            }
             return true;
         }
 
@@ -170,11 +202,11 @@ namespace Regexoop.src
 
         protected bool IsCompletePattern()
         {
-            if (Start == Direction.start)
-            {
+            //if (Start == Direction.start)
+            //{
                 return _cursorPattern >= Pattern.Length;
-            }
-            return _cursorPattern <= 0;
+            //}
+            //return _cursorPattern <= 0;
         }
 
         protected void ResetCursorPattern()
@@ -184,27 +216,23 @@ namespace Regexoop.src
 
         protected void MoveCursorPattern(int value)
         {
-            if (Start == Direction.start)
-            {
+            //if (Start == Direction.start)
+            //{
                 _cursorPattern += value;
-            } 
-            else
-            {
-                _cursorPattern -= value;
-            }
+            //} 
+            //else
+            //{
+            //    _cursorPattern -= value;
+            //}
         }
 
         protected int GetCursorPattern(int value = 0)
         {
-            if (value > 0)
+            if (value == 0)
             {
-                if (Start == Direction.start)
-                {
-                    return _cursorPattern + value;
-                }
-                return _cursorPattern - value;
+                return _cursorPattern;
             }
-            return _cursorPattern;
+            return value > 0 ? _cursorPattern + value : _cursorPattern - value;
         }
 
         public bool IsMoveInputCursor()

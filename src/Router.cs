@@ -33,7 +33,7 @@ namespace Regexoop.src
             {
                 return true;
             }
-
+            // todo check requires for all of rules
             if (!_rule.Peek().CheckRequires())
             {
                 return false;
