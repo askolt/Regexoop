@@ -34,12 +34,12 @@ namespace Regexoop
         {
 
             List<string> result = new List<string>();
-            foreach (Rule rule in Rules)
+            foreach (Rule rootRule in Rules)
             {
                 // each root rules have own input text;
-                InputText copyInput = new InputText();
+                InputText copyInput = new InputText(rootRule);
                 copyInput.Input(_input);
-                Router charge = new Router(rule, copyInput);
+                Router charge = new Router(rootRule, copyInput);
                 charge.Step();
                 charge.Complete();
                 result.AddRange(charge.GetResult());

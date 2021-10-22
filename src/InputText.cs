@@ -14,19 +14,41 @@ namespace Regexoop.src
 
         protected bool _useInputText;
 
+        protected Rule.Direction _direction;
+
+        public InputText(Rule rule)
+        {
+            _direction = rule.Start;
+        }
+
         //Warning. Don't move cursor here. 
         public string GetSymbols(int range)
         {
             _useInputText = true;
             List<char> chars = new List<char>();
-            int EndRange = _cursor + range;
-            if (EndRange > _inputText.Length)
+            if (_direction == Rule.Direction.start)
             {
-                EndRange = _inputText.Length;
+                int EndRange = _cursor + range;
+                if (EndRange > _inputText.Length)
+                {
+                    EndRange = _inputText.Length;
+                }
+                for (int x = _cursor; x < EndRange; x++)
+                {
+                    chars.Add(_inputText[x]);
+                }
             }
-            for (int x = _cursor; x < EndRange; x++)
+            if (_direction == Rule.Direction.end)
             {
-                chars.Add(_inputText[x]);
+                int EndRange = _cursor - range;
+                if (EndRange < 0)
+                {
+                    EndRange = -1;
+                }
+                for (int x = _cursor; x > EndRange; x--)
+                {
+                    chars.Add(_inputText[x]);
+                }
             }
             return new string(chars.ToArray());
         }
@@ -36,23 +58,42 @@ namespace Regexoop.src
             if (_useInputText == true)
             {
                 _useInputText = false;
-                //todo clear readed text
-                if (count <= 0)
+                if (_direction == Rule.Direction.end)
                 {
-                    count = 1;
+                    if (count <= 0)
+                    {
+                        count = 1;
+                    }
+                    _cursor -= count;
                 }
-                _cursor += count;
+                else
+                {
+                    if (count <= 0)
+                    {
+                        count = 1;
+                    }
+                    _cursor += count;
+                }
+                //todo clear readed text
             }
         }
 
         public bool IsComplete()
         {
-            return _cursor > _inputText.Length;
+            return _direction == Rule.Direction.end ? _cursor < 0 : _cursor > _inputText.Length;
         }
 
         public void Input(string input)
         {
-            _inputText += input;
+            if (_direction == Rule.Direction.end)
+            {
+                _inputText = input + _inputText;
+                _cursor = _inputText.Length - 1;
+            }
+            else
+            {
+                _inputText += input;
+            }
         }
 
         public void Clear()

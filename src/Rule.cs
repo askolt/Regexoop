@@ -64,7 +64,7 @@ namespace Regexoop.src
 
         protected bool _needRedirect;
 
-        protected bool _moveInputCursor;
+        //protected bool _moveInputCursor;
 
         List<ICommand> _commands = new List<ICommand>();
 
@@ -118,6 +118,7 @@ namespace Regexoop.src
 
         public Status ParseSymbol(InputText inputChars)
         {
+            PrepareRule();
             //_moveInputCursor = false;
             if (_status != Status.Step)
             {
@@ -139,7 +140,7 @@ namespace Regexoop.src
             //if (resStatus == Status.Step && _result.Length == Pattern.Length) //normal way
             if (resStatus == Status.Step && IsCompletePattern() && IsNeedRedirect() == false) //normal way
             {
-                _moveInputCursor = false;
+                //_moveInputCursor = false;
                 _status = Status.Complete;
                 return Status.Complete;
             }
@@ -163,7 +164,7 @@ namespace Regexoop.src
                 _status = Status.Complete; //todo check it
                 return null;
             }
-            _moveInputCursor = true;
+            //_moveInputCursor = true;
             foreach (ICommand command in _commands)
             {
                 if (command.StartCommand == Pattern[_cursorPattern].ToString())
@@ -235,10 +236,10 @@ namespace Regexoop.src
             return value > 0 ? _cursorPattern + value : _cursorPattern - value;
         }
 
-        public bool IsMoveInputCursor()
-        {
-            return _moveInputCursor;
-        }
+        //public bool IsMoveInputCursor()
+        //{
+        //    return _moveInputCursor;
+        //}
 
         public string GetResult()
         {
@@ -247,7 +248,14 @@ namespace Regexoop.src
 
         public void SetResult(string text)
         {
-            _result += text;
+            if (Start == Direction.end)
+            {
+                _result = text + _result;
+            }
+            else
+            {
+                _result += text;
+            }
         }
 
         public Rule GetRedirectRule()

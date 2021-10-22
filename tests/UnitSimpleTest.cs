@@ -259,8 +259,6 @@ namespace ConsoleRegexoop
             {
                 Assert.Equal("Hello World Hello World", re);
             }
-
-
         }
 
         [Fact]
