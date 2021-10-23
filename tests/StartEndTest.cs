@@ -175,7 +175,7 @@ namespace testsRegexoop
                                           }
             };
 
-            List<string> res = new Regexoop.Regexoop(test).Input("Hello World Hello World Mur").Find();
+            List<string> res = new Regexoop.Regexoop(test).Input("  Hello World Hello World Mur   ").Find();
             foreach (string re in res)
             {
                 Assert.Equal("Hello World Hello World Mur", re);
@@ -200,7 +200,7 @@ namespace testsRegexoop
                                           }
             };
 
-            List<string> res = new Regexoop.Regexoop(test).Input("Hello World World Hello World World").Find();
+            List<string> res = new Regexoop.Regexoop(test).Input("Hello World World     Hello World World").Find();
             foreach (string re in res)
             {
                 Assert.Equal("Hello World World", re);

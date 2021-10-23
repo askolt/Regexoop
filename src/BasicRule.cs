@@ -8,7 +8,7 @@ namespace Regexoop.src
 {
     public class BasicRule : Rule
     {
-        protected override Rule CopyRule(Rule rule)
+        public override Rule CopyRule(Rule rule)
         {
             Name = rule.Name;
             Pattern = rule.Pattern;
@@ -28,6 +28,10 @@ namespace Regexoop.src
             Chunk = rule.Chunk;
             AsArray = rule.AsArray;
             Variables = rule.Variables;
+            if (rule.IsNeedRedirect() && rule.Name == Name)
+            {
+                _preparedRule = true;
+            }
             return this;
         }
     }

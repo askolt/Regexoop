@@ -185,12 +185,12 @@ namespace ConsoleRegexoop
                 LoopVariable = 2
             };
 
-            List<string> res = new Regexoop.Regexoop(test).Input("HelloHelloHello").Find();
-            Assert.True(res.Count == 1);
+            List<string> res = new Regexoop.Regexoop(test).Input("    HelloHelloHello    HelloHelloHello").Find();
             foreach (string re in res)
             {
                 Assert.Equal("HelloHelloHello", re);
             }
+            Assert.True(res.Count == 2);
         }
 
         [Fact]
@@ -229,7 +229,7 @@ namespace ConsoleRegexoop
                                           }
             };
 
-            List<string> res =  new Regexoop.Regexoop(test).Input("Hello World World Hello World World").Find();
+            List<string> res =  new Regexoop.Regexoop(test).Input("    Hello World World     Hello World World").Find();
             Assert.True(res.Count == 2);
             foreach (string re in res)
             {

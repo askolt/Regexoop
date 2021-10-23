@@ -23,7 +23,7 @@ namespace Regexoop.src
         public Router(Rule rule, InputText input)
         {
             _rule.Push(rule);
-            _rootRule = rule;
+            _rootRule = new BasicRule().CopyRule(rule);
             _input = input;
         }
 
@@ -52,7 +52,8 @@ namespace Regexoop.src
                     {
                         _result.Add(_rawResult[0]);
                         _rawResult.Clear();
-                        _rule.Push(_rootRule);
+                        Rule _newRootRule = new BasicRule().CopyRule(_rootRule);
+                        _rule.Push(_newRootRule);
                     }
                     else
                     {
@@ -62,7 +63,8 @@ namespace Regexoop.src
                 }
                 if (stepResult == Rule.Status.Wrong)
                 {
-                    _rule.Pop();
+                    //todo collect chunks
+                    _rule.Clear();
                 }
                 if (_rule.Count == 0) //todo
                 {

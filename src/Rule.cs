@@ -314,6 +314,6 @@ namespace Regexoop.src
             return false;
         }
 
-        abstract protected Rule CopyRule(Rule rule);
+        abstract public Rule CopyRule(Rule rule);
     }
 }
