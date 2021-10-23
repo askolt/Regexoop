@@ -14,7 +14,7 @@ The library regexoop can be installed as Nuget packet [regexoop on nuget](https:
 
 # Project versioning
 
-Despite a last commit has version 0.0.2 I chosed to follow [Semantic Versioning 2.0.0](https://semver.org)
+Despite the last commit having version 0.0.2 I chose to follow [Semantic Versioning 2.0.0](https://semver.org)
 
 To make it convenient for you to move around and understand what has already been implemented, I left such a table in the body of each documentation.
 
