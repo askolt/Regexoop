@@ -12,9 +12,9 @@ namespace Regexoop.src
         {
             Name = rule.Name;
             Pattern = rule.Pattern;
-            Length = rule.Length;
+            /*Length = rule.Length;
             MinLength = rule.MinLength;
-            MaxLength = rule.MaxLength;
+            MaxLength = rule.MaxLength;*/
             Repeat = rule.Repeat;
             MinRepeat = rule.MinRepeat;
             MaxRepeat = rule.MaxRepeat;

@@ -18,13 +18,15 @@ namespace Regexoop.src
 
         public string Pattern;
 
-        public int Length;
+        /*public int Length;
 
         public int MinLength;
 
-        public int MaxLength;
+        public int MaxLength;*/
 
         public int Repeat;
+
+        protected int _repeat;
 
         public int MinRepeat;
 
@@ -113,6 +115,15 @@ namespace Regexoop.src
                 _status = Status.Skip;
                 ResetCursorPattern();
             }
+            if (MaxRepeat > 0 || MinRepeat > 0)
+            {
+                Repeat = 0;
+            }
+            if (Repeat < 0 || MaxRepeat < 0 || MinRepeat < 0)
+            {
+                throw new Exception("Parameter Repeat is wrong!");
+            }
+
             return true;
         }
 
@@ -137,6 +148,23 @@ namespace Regexoop.src
             {
                 _status = Status.Complete;
             }*/
+            if (IsCompletePattern() && (Repeat > 0 || MinRepeat > 0 || MaxRepeat > 0))
+            {
+                _repeat += 1;
+                if (Repeat > 0 && _repeat <= Repeat)
+                {
+                    ResetCursorPattern();
+                }
+                if (MinRepeat > 0)
+                {
+                    ResetCursorPattern();
+                }
+                if (MaxRepeat > 0 && _repeat <= MaxRepeat)
+                {
+                    ResetCursorPattern();
+                }
+            }
+
             //if (resStatus == Status.Step && _result.Length == Pattern.Length) //normal way
             if (resStatus == Status.Step && IsCompletePattern() && IsNeedRedirect() == false) //normal way
             {
@@ -146,6 +174,11 @@ namespace Regexoop.src
             }
             if (resStatus == Status.Wrong && _status == Status.Step)
             {
+                if (MinRepeat > 0 && _repeat >= MinRepeat)
+                {
+                    _status = Status.Complete;
+                    return Status.Complete;
+                }
                 _status = Status.Wrong;
                 return Status.Wrong;
             }
