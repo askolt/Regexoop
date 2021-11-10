@@ -60,7 +60,7 @@ namespace Regexoop.src
 
         public delegate void IfAfter();
 
-        public List<Rule> Variables;
+        public List<Rule> Variables = new List<Rule>();
 
         protected Rule _redirectRule;
 
@@ -123,7 +123,10 @@ namespace Regexoop.src
             {
                 throw new Exception("Parameter Repeat is wrong!");
             }
-
+            foreach (Rule variable in Variables)
+            {
+                variable.Start = Start;
+            }
             return true;
         }
 

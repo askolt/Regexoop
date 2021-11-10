@@ -104,7 +104,7 @@ namespace testsRegexoop
             test.PrepareRule();
             test.Variables[0].PrepareRule();
             Assert.Equal("{world} olleH", test.Pattern);
-            Assert.Equal("tset", test.Variables[0].Pattern); //For release 0.0.2 this test is false
+            Assert.Equal("tset", test.Variables[0].Pattern);
         }
 
         [Fact]
@@ -120,8 +120,7 @@ namespace testsRegexoop
                     new BasicRule()
                     {
                         Name = "world",
-                        Pattern = "test",
-                        Start = Rule.Direction.end,
+                        Pattern = "test"
                     }
                 }
             };
@@ -145,7 +144,7 @@ namespace testsRegexoop
                 Variables = new List<Rule> {
                                               new BasicRule() { Name = "world",
                                                                 Pattern = "World",
-                                                                Start = Rule.Direction.start,
+                                                                Start = Rule.Direction.start, //no effect
                                               }
                                           }
             };
@@ -170,7 +169,6 @@ namespace testsRegexoop
                 Variables = new List<Rule> {
                                               new BasicRule() { Name = "world",
                                                                 Pattern = "World",
-                                                                Start = Rule.Direction.end,
                                               }
                                           }
             };
