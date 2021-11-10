@@ -32,9 +32,9 @@ namespace Regexoop.src
 
         public bool Trim;
 
-        public Direction Start;
+        public Direction Start = Direction.start;
 
-        public bool Result;
+        public bool Result = true;
 
         protected string _result;
 
