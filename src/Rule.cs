@@ -243,7 +243,7 @@ namespace Regexoop.src
 
         public string GetResult()
         {
-            return _result;
+            return Result ? _result : "";
         }
 
         public void SetResult(string text)
